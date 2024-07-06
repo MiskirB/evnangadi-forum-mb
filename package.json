@@ -1,5 +1,5 @@
 {
-  "homepage":"https://MiskirB.github.io/evangadi-forum-front",
+  // "homepage":"https://MiskirB.github.io/evangadi-forum-front",
   "name": "client",
   "version": "0.1.0",
   "private": true,
@@ -57,3 +57,4 @@
     "tailwindcss": "^3.4.4"
   }
 }
+  
