@@ -15,16 +15,25 @@ function Answer() {
   const { id } = useParams();
   const answerDoc = useRef();
 
-  const userid = user.userid;
+  const userid = user?.userid;
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
+    if (!token) {
+      setErrorMessage("You need to be logged in to view this content");
+      return;
+    }
     getAllAnswers();
-  }, [id]);
+  }, [id, token]);
 
   async function getAllAnswers() {
     setLoading(true);
     try {
-      const response = await axios.get(`/answers/${id}`);
+      const response = await axios.get(`/answers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data && response.data.length > 0) {
         setAnswers(response.data);
       } else {
@@ -38,24 +47,36 @@ function Answer() {
     }
   }
 
-  const handleOpstAnswer = async () => {
+  const handlePostAnswer = async () => {
     const answer = answerDoc.current.value;
     if (!answer) {
       setErrorMessage("Please provide all required information");
       return;
     }
+    if (!token) {
+      setErrorMessage("Authentication invalid. Please log in again.");
+      return;
+    }
     try {
-      const response = await axios.post("/answers/give-answers", {
-        answer,
-        questionid: id,
-        userid,
-      });
+      const response = await axios.post(
+        "/answers/give-answers",
+        {
+          answer,
+          questionid: id,
+          userid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setSuccessMessage("Posted successfully");
       setErrorMessage("");
       answerDoc.current.value = "";
       getAllAnswers();
     } catch (error) {
-      setErrorMessage(error.response.data.msg);
+      setErrorMessage(error.response?.data?.msg || "Failed to post answer. Please try again.");
       console.error("Error posting answer:", error);
     }
   };
@@ -115,7 +136,7 @@ function Answer() {
             <p className="text-green-500 text-center">{successMessage}</p>
           )}
           <button
-            onClick={handleOpstAnswer}
+            onClick={handlePostAnswer}
             className="bg-blue-600 py-1 text-white px-14 rounded-sm"
           >
             Post Your Answer
@@ -127,6 +148,7 @@ function Answer() {
 }
 
 export default Answer;
+
 
 
 
