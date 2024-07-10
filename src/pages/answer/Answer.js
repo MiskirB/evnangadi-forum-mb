@@ -98,21 +98,25 @@ function Answer() {
         </div>
         {loading ? (
           <div>Loading...</div>
-        ) : (
-          answers.slice(1).map((answer) => (
-            <div className="flex gap-6" key={answer.answerid}>
-              <div>
-                <div className="w-24">
-                  <img src={profile} alt="Profile" />
-                </div>
-                <h2 className="text-center">{answer.username}</h2>
+  ) : (
+    answers?.map((answer) => {
+      if (answer.answerid) {
+        return (
+          <div className="flex gap-6" key={answer.answerid}>
+            <div>
+              <div className="w-24">
+                <img src={profile} alt="Profile" />
               </div>
-              <div className="flex w-11/12 justify-between items-center">
-                <p>{answer.answer}</p>
-              </div>
+              <h2 className="text-center">{answer.username}</h2>
             </div>
-          ))
-        )}
+            <div className="flex w-11/12 justify-between items-center">
+              <p>{answer.answer}</p>
+            </div>
+          </div>
+        );
+      }
+    })
+  )}
         <h1 className="text-xl font-semibold text-center mb-5">
           Answer The Top Question
         </h1>
@@ -234,7 +238,7 @@ export default Answer;
 //             <h1 className="text-xl font-semibold">Answer From The Community</h1>
 //           </div>
 //           {answers.length > 1 && (
-//             <>
+            // <>
 //               {answers.map((answer) => {
 //                 return (
 //                   <div className="flex gap-6 ">

@@ -49,12 +49,11 @@ function Register({ dispatch }) {
         password: passValue,
       });
 
-      console.log("Registration Response Data:", data);
-
+     
       setSuccessMessage("Registration successful");
-      localStorage.setItem("token", data.token);
+  
       setIslogedin(true);
-      navigate("/home");
+     dispatch({type:"login"});
     } catch (error) {
       console.error("Registration Error:", error.response.data);
       setErrorMessage(error.response?.data?.msg || "Something went wrong");
